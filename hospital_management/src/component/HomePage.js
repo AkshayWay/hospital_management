@@ -10,20 +10,10 @@ import covid_banner from "../assets/images/covid_banner.jpg";
 export default class HomePage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      newsTitle: "",
-      newsDesc: "",
-      newsLastUpdate: "",
-      newsAvailable: "none",
-    };
+    this.state = {};
   }
 
   render() {
-    const marginBottom = {
-      marginBottom: "25px",
-    };
-    var newsDate = this.state.newsLastUpdate;
-
     return (
       <div>
         <div>

@@ -10,33 +10,82 @@ import { Modal, Button, Form, Col } from "react-bootstrap";
 
 const DisplayList = (props) => (
   <tr>
-    <td>{props.PatienList.tbl_news_id}</td>
-    <td>{props.PatienList.tbl_news_title}</td>
-    <td>{props.PatienList.tbl_news_desciption}</td>
-
-    <td>
-      <input
-        type="checkbox"
-        value={props.PatienList.tbl_news_is_active}
-        name="active_news"
-        readOnly
-        checked={props.PatienList.tbl_news_is_active == 1 ? true : false}
-      />
-    </td>
-
-    <td>{props.PatienList.tbl_news_is_deleted}</td>
-
+    <td>{props.PatienList.tbl_user_fullName}</td>
+    <td>{props.PatienList.tbl_user_email}</td>
+    <td>{props.PatienList.tbl_user_phoneNumber}</td>
+    <td>{props.PatienList.tbl_user_state}</td>
+    <td>{props.PatienList.tbl_user_pincode}</td>
     <td>
       <Link
-        className="btn btn-primary"
-        to={"/editNews/" + props.PatienList.tbl_news_id}
+        className="btn btn-outline-primary"
+        to={"/patientInfo/" + props.PatienList.tbl_user_id}
       >
         Edit
       </Link>
     </td>
-    <td>{/* <DeletePatienList variant={props.PatienList} /> */}</td>
+    <td>
+      <Link
+        className="btn btn-outline-primary"
+        to={"/patientHistory/" + props.PatienList.tbl_user_id}
+      >
+        History
+      </Link>
+    </td>
+    <td>
+      <DeletePatienList variant={props.PatienList} />
+    </td>
   </tr>
 );
+
+function DeletePatienList(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const deleteAndClose = () => {
+    console.log("delete id: " + props.variant.tbl_user_id);
+    axios
+      .post(
+        "http://localhost:5000/medicare/patient_info/delete/" +
+          props.variant.tbl_user_id
+      )
+      .then((res) => console.log(res.data), window.location.reload(true));
+    setShow(false);
+  };
+  return (
+    <>
+      <Button
+        variant="primary"
+        className="btn btn-outline-danger"
+        style={{ backgroundColor: "transparent", color: "Red" }}
+        onClick={handleShow}
+      >
+        Delete
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete record</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete{" "}
+          <b>'{props.variant.tbl_user_fullName}'</b> ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            className="btn btn-outline-danger"
+            onClick={deleteAndClose}
+          >
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
 
 export default class PatientList extends Component {
   constructor(props) {
@@ -76,6 +125,15 @@ export default class PatientList extends Component {
       <div>
         <div>
           <h1>Patient list</h1>
+          <div>
+            <Link
+              type="button"
+              className="btn btn-outline-primary"
+              to={"/patientInfo/0"}
+            >
+              New Patient
+            </Link>
+          </div>
           <div className="table-responsive">
             <table
               className="table table-striped"
@@ -89,6 +147,7 @@ export default class PatientList extends Component {
                   <th>Phone Number</th>
                   <th>State</th>
                   <th>Pin Code</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>{this.fetchPatientList()}</tbody>
