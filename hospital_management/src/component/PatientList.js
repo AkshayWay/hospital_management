@@ -107,7 +107,7 @@ export default class PatientList extends Component {
         console.log("Error: " + err);
       });
   }
-  fetchPatientList() {
+  fetchPatientListfetchPatientList() {
     if (this.state.patientListArray.length > 0) {
       return this.state.patientListArray.map(function (getList, i) {
         return <DisplayList PatienList={getList} key={i}></DisplayList>;

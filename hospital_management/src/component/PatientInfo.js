@@ -97,9 +97,6 @@ export default class PatientInfo extends Component {
     // }
   }
   render() {
-    const buttonCenter = {
-      margin: "auto",
-    };
     return (
       <div>
         <div>
