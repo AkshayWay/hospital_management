@@ -36,7 +36,6 @@ const DisplayList = (props) => (
     </td>
   </tr>
 );
-
 function DeletePatienList(props) {
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
@@ -51,6 +50,7 @@ function DeletePatienList(props) {
       .then((res) => console.log(res.data), window.location.reload(true));
     setShow(false);
   };
+
   return (
     <>
       <Button
@@ -92,22 +92,31 @@ export default class PatientList extends Component {
     super(props);
     this.state = {
       patientListArray: [],
+      errorMsg: false,
     };
   }
+
   componentDidMount() {
-    axios
-      .get("http://localhost:5000/medicare/patient_list")
-      .then((response) => {
-        this.setState({
-          patientListArray: response.data,
+    if (parseInt(sessionStorage.getItem("userType")) == 2) {
+      axios
+        .get("http://localhost:5000/medicare/patient_list")
+        .then((response) => {
+          this.setState({
+            patientListArray: response.data,
+          });
+          console.log("Patient List", this.state.patientListArray);
+        })
+        .catch(function (err) {
+          console.log("Error: " + err);
         });
-        console.log("Patient List", this.state.patientListArray);
-      })
-      .catch(function (err) {
-        console.log("Error: " + err);
+    } else {
+      this.setState({
+        errorMsg: true,
       });
+    }
   }
-  fetchPatientListfetchPatientList() {
+
+  fetchPatientList() {
     if (this.state.patientListArray.length > 0) {
       return this.state.patientListArray.map(function (getList, i) {
         return <DisplayList PatienList={getList} key={i}></DisplayList>;
@@ -121,40 +130,45 @@ export default class PatientList extends Component {
     }
   }
   render() {
-    return (
-      <div>
+    const errorMessage = this.state.errorMsg;
+    if (errorMessage) {
+      return <div>Error: 404</div>;
+    } else {
+      return (
         <div>
-          <h1>Patient list</h1>
           <div>
-            <Link
-              type="button"
-              className="btn btn-outline-primary"
-              to={"/patientInfo/0"}
-            >
-              New Patient
-            </Link>
-          </div>
-          <div className="table-responsive">
-            <table
-              className="table table-striped"
-              style={{ marginTop: 20 }}
-              id="SelectListExcel"
-            >
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone Number</th>
-                  <th>State</th>
-                  <th>Pin Code</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>{this.fetchPatientList()}</tbody>
-            </table>
+            <h1>Patient list</h1>
+            <div>
+              <Link
+                type="button"
+                className="btn btn-outline-primary"
+                to={"/patientInfo/0"}
+              >
+                New Patient
+              </Link>
+            </div>
+            <div className="table-responsive">
+              <table
+                className="table table-striped"
+                style={{ marginTop: 20 }}
+                id="SelectListExcel"
+              >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>State</th>
+                    <th>Pin Code</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>{this.fetchPatientList()}</tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }

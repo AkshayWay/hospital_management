@@ -4,13 +4,16 @@ const mySqlConnection = require("../db_connection");
 
 //Get patient list
 Router.get("/patient_list", (req, res) => {
-  mySqlConnection.query("SELECT * FROM tbl_user_info;", (err, rows) => {
-    if (!err) {
-      res.send(rows);
-    } else {
-      console.log("Error :" + err);
+  mySqlConnection.query(
+    "SELECT * FROM tbl_user_info where tbl_user_type<>2",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
     }
-  });
+  );
 });
 //Specific Patient information
 Router.get("/patient_list/:id", (req, res) => {
@@ -86,7 +89,6 @@ Router.get("/patient_history/:id", (req, res) => {
 });
 Router.post("/new_patient_history", (req, res) => {
   let newsObj = req.body;
-  console.log("data send", newsObj);
   var sqlQuery =
     "SET @tbl_patient_diagnosis=?;SET @tbl_patient_medicine=?;" +
     "SET @tbl_patient_id=?; CALL sp_new_diagnosis(@tbl_patient_diagnosis,@tbl_patient_medicine,@tbl_patient_id)";
@@ -97,6 +99,24 @@ Router.post("/new_patient_history", (req, res) => {
       newsObj.tbl_patient_medicine,
       newsObj.tbl_patient_id,
     ],
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//user login
+Router.get("/login/:tbl_user_email/:tbl_user_password", (req, res) => {
+  let newObj = req.params;
+  mySqlConnection.query(
+    "select * from tbl_user_info where tbl_user_email='" +
+      req.params.tbl_user_email +
+      "' and tbl_user_password='" +
+      req.params.tbl_user_password +
+      "';",
     (err, rows) => {
       if (!err) {
         res.send(rows);
