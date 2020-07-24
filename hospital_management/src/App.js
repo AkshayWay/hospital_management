@@ -23,8 +23,8 @@ function App() {
         {sessionStorage.getItem("full_name") == undefined ? "" : <Navigation />}
         {/* <Navigation /> */}
         <div className="container" style={{ minHeight: 511 + "px" }}>
-          <Route path="/login" exact component={Login}></Route>
-          <Route path="/" exact component={HomePage}></Route>
+          <Route path="/" exact component={Login}></Route>
+          <Route path="/home" exact component={HomePage}></Route>
           <Route path="/patientList" exact component={PatientList}></Route>
           <Route path="/ProfileInfo/:id" exact component={ProfileInfo}></Route>
           <Route
@@ -33,6 +33,7 @@ function App() {
             component={PatientHistory}
           ></Route>
         </div>
+        {sessionStorage.getItem("full_name") == undefined ? "" : <Footer />}
         {/* <Footer /> */}
       </div>
     </Router>

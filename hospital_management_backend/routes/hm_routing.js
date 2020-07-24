@@ -31,8 +31,7 @@ Router.get("/patient_list/:id", (req, res) => {
 });
 //Add or edit patient information
 Router.post("/patient_info/:id", (req, res) => {
-  let newsObj = req.body;
-  console.log(newsObj);
+  let newObj = req.body;
   var sqlQuery =
     "SET @tbl_user_id=?; SET @tbl_user_fullName=?; SET @tbl_user_email=?; " +
     "SET @tbl_user_password=?;SET @tbl_user_phoneNumber=?;SET @tbl_user_address=?;" +
@@ -42,16 +41,16 @@ Router.post("/patient_info/:id", (req, res) => {
   mySqlConnection.query(
     sqlQuery,
     [
-      newsObj.tbl_user_id,
-      newsObj.tbl_user_fullName,
-      newsObj.tbl_user_email,
-      newsObj.tbl_user_password,
-      newsObj.tbl_user_phoneNumber,
-      newsObj.tbl_user_address,
-      newsObj.tbl_user_city,
-      newsObj.tbl_user_state,
-      newsObj.tbl_user_pincode,
-      newsObj.tbl_user_type,
+      newObj.tbl_user_id,
+      newObj.tbl_user_fullName,
+      newObj.tbl_user_email,
+      newObj.tbl_user_password,
+      newObj.tbl_user_phoneNumber,
+      newObj.tbl_user_address,
+      newObj.tbl_user_city,
+      newObj.tbl_user_state,
+      newObj.tbl_user_pincode,
+      newObj.tbl_user_type,
     ],
     (err, rows) => {
       if (!err) {
@@ -88,17 +87,18 @@ Router.get("/patient_history/:id", (req, res) => {
     }
   );
 });
+//Patient medical history
 Router.post("/new_patient_history", (req, res) => {
-  let newsObj = req.body;
+  let newObj = req.body;
   var sqlQuery =
     "SET @tbl_patient_diagnosis=?;SET @tbl_patient_medicine=?;" +
     "SET @tbl_patient_id=?; CALL sp_new_diagnosis(@tbl_patient_diagnosis,@tbl_patient_medicine,@tbl_patient_id)";
   mySqlConnection.query(
     sqlQuery,
     [
-      newsObj.tbl_patient_diagnosis,
-      newsObj.tbl_patient_medicine,
-      newsObj.tbl_patient_id,
+      newObj.tbl_patient_diagnosis,
+      newObj.tbl_patient_medicine,
+      newObj.tbl_patient_id,
     ],
     (err, rows) => {
       if (!err) {
@@ -109,7 +109,7 @@ Router.post("/new_patient_history", (req, res) => {
     }
   );
 });
-//user login
+//User login
 Router.get("/login/:tbl_user_email/:tbl_user_password", (req, res) => {
   let newObj = req.params;
   mySqlConnection.query(

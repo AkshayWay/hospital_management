@@ -8,6 +8,7 @@ import {
 import covid_banner from "../assets/images/covid_banner.jpg";
 import axios from "axios";
 import { Form, Input, InputNumber, Button } from "antd";
+import { Alert } from "antd";
 
 export default class ProfileInfo extends Component {
   formRef = React.createRef();
@@ -26,35 +27,24 @@ export default class ProfileInfo extends Component {
       userType: 1,
       actionToPerform: "Add",
       errorMsg: false,
+      warning_message: "",
+      errMSgDisplay: "none",
     };
   }
-  onFullNameChange = (e) => this.setState({ userFullName: e.target.value });
-  onEmailChange = (e) => this.setState({ userEmail: e.target.value });
-  onPasswordChange = (e) => this.setState({ userPassword: e.target.value });
-  onPhoneNumberChange = (e) =>
-    this.setState({ userPhoneNumber: e.target.value });
-  onAddressChange = (e) => this.setState({ userAddress: e.target.value });
-  onCityChange = (e) => this.setState({ userCity: e.target.value });
-  onStateChange = (e) => this.setState({ userState: e.target.value });
-  onPincodeChange = (e) => this.setState({ userPincode: e.target.value });
+  //onFullNameChange = (e) => this.setState({ userFullName: e.target.value });
+  // onEmailChange = (e) => this.setState({ userEmail: e.target.value });
+  //onPasswordChange = (e) => this.setState({ userPassword: e.target.value });
+  //onAddressChange = (e) => this.setState({ userAddress: e.target.value });
+  //onCityChange = (e) => this.setState({ userCity: e.target.value });
+  //onStateChange = (e) => this.setState({ userState: e.target.value });
+  //onPincodeChange = (e) => this.setState({ userPincode: e.target.value });
 
   onSubmit = (e) => {
     if (e && e.preventDefault) {
       e.preventDefault();
     }
     //e.preventDefault();
-    // const obj = {
-    //   tbl_user_id: this.state.userId,
-    //   tbl_user_fullName: this.state.userFullName,
-    //   tbl_user_email: this.state.userEmail,
-    //   tbl_user_password: this.state.userPassword,
-    //   tbl_user_phoneNumber: this.state.userPhoneNumber,
-    //   tbl_user_address: this.state.userAddress,
-    //   tbl_user_city: this.state.userCity,
-    //   tbl_user_state: this.state.userState,
-    //   tbl_user_pincode: this.state.userPincode,
-    //   tbl_user_type: this.state.userType,
-    // };
+
     const obj = {
       tbl_user_id: this.state.userId,
       tbl_user_fullName: e.userFullName,
@@ -67,7 +57,6 @@ export default class ProfileInfo extends Component {
       tbl_user_pincode: e.userPincode,
       tbl_user_type: this.state.userType,
     };
-    console.log("Data:", obj);
     axios
       .post(
         "http://localhost:5000/medicare/patient_info/" +
@@ -77,7 +66,7 @@ export default class ProfileInfo extends Component {
       .then((res) => {
         console.log("Patient information was successfully Inserted/Updated");
         if (parseInt(sessionStorage.getItem("user_id")) == this.state.userId) {
-          this.props.history.push("/");
+          this.props.history.push("/home");
         } else {
           this.props.history.push("/patientList");
         }
@@ -100,7 +89,6 @@ export default class ProfileInfo extends Component {
               this.props.match.params.id
           )
           .then((response) => {
-            console.log("response:", response.data[0]);
             this.setState({
               userId: response.data[0].tbl_user_id,
               userFullName: response.data[0].tbl_user_fullName,
@@ -114,8 +102,6 @@ export default class ProfileInfo extends Component {
               userType: response.data[0].tbl_user_type,
               actionToPerform: "Edit",
             });
-
-            console.log("User id : " + this.state.userId);
             this.formRef.current.setFieldsValue({
               userId: this.state.userId,
               userFullName: this.state.userFullName,
@@ -127,23 +113,28 @@ export default class ProfileInfo extends Component {
               userState: this.state.userState,
               userPincode: this.state.userPincode,
             });
-            console.log("Userfull name", this.state.userFullName);
           })
           .catch(function (error) {
             console.log(error);
           });
       }
-      // else {
-      //   this.setState({
-      //     datesDisplay: "none",
-      //   });
-      // }
     } else {
+      //Error message: 404 Not found
       this.setState({ errorMsg: true });
     }
   }
-  onFinish = (values) => {
-    console.log(values);
+  validateMobileNumber = (rule, value, callback) => {
+    console.log("this is a mobil validator", value);
+    if (value.length != 10) {
+      this.setState({
+        errMSgDisplay: "inline",
+        warning_message: "Invalid mobile nuumber",
+      });
+    } else {
+      this.setState({
+        errMSgDisplay: "none",
+      });
+    }
   };
   render() {
     const errorMessage = this.state.errorMsg;
@@ -162,12 +153,16 @@ export default class ProfileInfo extends Component {
         range: "${label} must be between ${min} and ${max}",
       },
     };
-    var fullName = this.state.userFullName;
     if (errorMessage) {
-      return <div>Error: 404</div>;
+      return <div>Error: 404 Page not found</div>;
     } else {
       return (
         <div style={{ padding: "50px 0" }}>
+          <Alert
+            message={this.state.warning_message}
+            style={{ display: this.state.errMSgDisplay }}
+            type="warning"
+          />
           <Form
             {...layout}
             name="nest-messages"
@@ -193,13 +188,6 @@ export default class ProfileInfo extends Component {
             >
               <Input />
             </Form.Item>
-            {/* <Form.Item
-              name={["user", "age"]}
-              label="Age"
-              rules={[{ type: "number", min: 0, max: 99 }]}
-            >
-              <InputNumber />
-            </Form.Item> */}
             <Form.Item
               name="userPassword"
               rules={[{ required: true }]}
@@ -210,6 +198,7 @@ export default class ProfileInfo extends Component {
             <Form.Item
               name="userPhoneNumber"
               label="Phone Number"
+              onChange={this.state.onPhoneNumberChange}
               rules={[
                 {
                   required: true,
@@ -218,13 +207,14 @@ export default class ProfileInfo extends Component {
             >
               <Input />
             </Form.Item>
-            <Form.Item name="userAddress" label="Address">
+            <Form.Item name="userAddress" label="Address 1">
               <Input.TextArea />
             </Form.Item>
 
-            <Form.Item label="City" style={{ marginBottom: 0 }}>
+            <Form.Item label="Address 2" style={{ marginBottom: 0 }}>
               <Form.Item
                 name="userCity"
+                label="City"
                 rules={[{ required: true }]}
                 style={{ display: "inline-block", width: "calc(40% - 8px)" }}
               >
@@ -232,6 +222,7 @@ export default class ProfileInfo extends Component {
               </Form.Item>
               <Form.Item
                 name="userState"
+                label="State"
                 rules={[{ required: true }]}
                 style={{
                   display: "inline-block",
@@ -243,6 +234,7 @@ export default class ProfileInfo extends Component {
               </Form.Item>
               <Form.Item
                 name="userPincode"
+                label="Pin code"
                 rules={[{ required: true }]}
                 style={{
                   display: "inline-block",
@@ -250,7 +242,7 @@ export default class ProfileInfo extends Component {
                   margin: "0 8px",
                 }}
               >
-                <Input />
+                <InputNumber />
               </Form.Item>
             </Form.Item>
 

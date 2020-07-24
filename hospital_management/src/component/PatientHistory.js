@@ -115,7 +115,7 @@ export default class PatientHistory extends Component {
     } else {
       return (
         <div>
-          <h2>Patient History</h2>
+          <h4>Patient History</h4>
           <h3>{this.state.userFullName}</h3>
           <form
             onSubmit={this.onSubmit}

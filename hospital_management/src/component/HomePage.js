@@ -16,17 +16,22 @@ export default class HomePage extends Component {
   }
 
   render() {
-    return (
-      <div>
+    if (sessionStorage.getItem("loggedIn") == false) {
+      return <div>404 Page not found</div>;
+    } else {
+      return (
         <div>
-          <h1>{this.state.userName}</h1>
-          <img
-            src={covid_banner}
-            className="img-fluid rounded rounded shadow p-3 mb-5 bg-white rounded"
-            alt="Responsive image"
-          />
+          <div>
+            <h1>{this.state.userName}</h1>
+            <img
+              src={covid_banner}
+              className="img-fluid rounded rounded shadow p-3 mb-5 bg-white rounded"
+              alt="Responsive image"
+            />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
+  s;
 }

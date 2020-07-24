@@ -20,7 +20,7 @@ const DisplayList = (props) => (
         className="btn btn-outline-primary"
         to={"/ProfileInfo/" + props.PatienList.tbl_user_id}
       >
-        Edit
+        Profile
       </Link>
     </td>
     <td>
@@ -132,7 +132,7 @@ export default class PatientList extends Component {
   render() {
     const errorMessage = this.state.errorMsg;
     if (errorMessage) {
-      return <div>Error: 404</div>;
+      return <div>Error: 404 Page not found</div>;
     } else {
       return (
         <div>
@@ -160,7 +160,7 @@ export default class PatientList extends Component {
                     <th>Phone Number</th>
                     <th>State</th>
                     <th>Pin Code</th>
-                    <th>Action</th>
+                    <th colSpan="3">Action</th>
                   </tr>
                 </thead>
                 <tbody>{this.fetchPatientList()}</tbody>

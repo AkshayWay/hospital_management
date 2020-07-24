@@ -28,7 +28,7 @@ class Navigation extends Component {
   }
   logOut() {
     sessionStorage.clear();
-    window.location = "http://localhost:3000/login";
+    window.location = "http://localhost:3000";
   }
   render() {
     return (
@@ -51,7 +51,7 @@ class Navigation extends Component {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link to="/" className="nav-link">
+              <Link to="/home" className="nav-link">
                 Dashboard
               </Link>
             </li>

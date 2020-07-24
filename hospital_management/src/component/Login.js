@@ -24,8 +24,8 @@ export default class Login extends Component {
       errMSgDisplay: "none",
     };
   }
-  onEmailChange = (e) => this.setState({ email: e.target.value });
-  onPasswordChange = (e) => this.setState({ password: e.target.value });
+  // onEmailChange = (e) => this.setState({ email: e.target.value });
+  // onPasswordChange = (e) => this.setState({ password: e.target.value });
   onSubmit = (e) => {
     // e.preventDefault();
     if (e && e.preventDefault) {
@@ -33,11 +33,6 @@ export default class Login extends Component {
     }
     var newEmail = e.email;
     var newPassword = e.password;
-
-    // const obj = {
-    //   tbl_user_email: e.email,
-    //   tbl_user_password: e.password,
-    // };
     axios
       .get(
         "http://localhost:5000/medicare/login/" + newEmail + "/" + newPassword
@@ -45,12 +40,6 @@ export default class Login extends Component {
       .then((response) => {
         console.log("response:", response.data[0]);
         if (response.data.length > 0) {
-          /*localStorage.setItem("fullName", response.data[0].tbl_user_fullName);
-          localStorage.setItem("loggedIn", "true");
-          localStorage.setItem("user_id", response.data[0].tbl_user_id);
-          localStorage.setItem("userType", response.data[0].tbl_user_type);
-*/
-
           sessionStorage.setItem(
             "full_name",
             response.data[0].tbl_user_fullName
@@ -58,7 +47,7 @@ export default class Login extends Component {
           sessionStorage.setItem("loggedIn", true);
           sessionStorage.setItem("user_id", response.data[0].tbl_user_id);
           sessionStorage.setItem("userType", response.data[0].tbl_user_type);
-          this.props.history.push("/");
+          this.props.history.push("/home");
           window.location.reload(true);
         } else {
           this.setState({
@@ -92,15 +81,6 @@ export default class Login extends Component {
         span: 16,
       },
     };
-
-    // const onFinish = (values) => {
-    //  console.log("Success:", values);
-    //};
-
-    //const onFinishFailed = (errorInfo) => {
-    //console.log("Failed:", errorInfo);
-    //};
-    // };
     const validateMessages = {
       required: "${label} is required!",
       types: {
@@ -110,6 +90,9 @@ export default class Login extends Component {
 
     return (
       <div className="center">
+        <div style={{ textAlign: "center" }}>
+          <h2>Login</h2>
+        </div>
         <Alert
           message={this.state.errorMsg}
           style={{ display: this.state.errMSgDisplay }}
@@ -123,8 +106,6 @@ export default class Login extends Component {
           }}
           onFinish={this.onSubmit}
           validateMessages={validateMessages}
-
-          // onSubmit={}
         >
           <Form.Item
             label="Email"
