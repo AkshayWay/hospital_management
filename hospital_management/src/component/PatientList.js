@@ -18,7 +18,7 @@ const DisplayList = (props) => (
     <td>
       <Link
         className="btn btn-outline-primary"
-        to={"/patientInfo/" + props.PatienList.tbl_user_id}
+        to={"/ProfileInfo/" + props.PatienList.tbl_user_id}
       >
         Edit
       </Link>
@@ -142,7 +142,7 @@ export default class PatientList extends Component {
               <Link
                 type="button"
                 className="btn btn-outline-primary"
-                to={"/patientInfo/0"}
+                to={"/ProfileInfo/0"}
               >
                 New Patient
               </Link>

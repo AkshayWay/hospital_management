@@ -32,6 +32,7 @@ Router.get("/patient_list/:id", (req, res) => {
 //Add or edit patient information
 Router.post("/patient_info/:id", (req, res) => {
   let newsObj = req.body;
+  console.log(newsObj);
   var sqlQuery =
     "SET @tbl_user_id=?; SET @tbl_user_fullName=?; SET @tbl_user_email=?; " +
     "SET @tbl_user_password=?;SET @tbl_user_phoneNumber=?;SET @tbl_user_address=?;" +

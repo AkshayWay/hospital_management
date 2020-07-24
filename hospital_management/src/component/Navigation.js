@@ -61,7 +61,7 @@ class Navigation extends Component {
               </Link> */}
               <Link
                 className="nav-link"
-                to={"/patientInfo/" + this.state.userId}
+                to={"/ProfileInfo/" + this.state.userId}
               >
                 Profile
               </Link>

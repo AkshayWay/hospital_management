@@ -11,7 +11,7 @@ import "./App.css";
 import Navigation from "./component/Navigation";
 import HomePage from "./component/HomePage";
 import PatientList from "./component/PatientList";
-import PatientInfo from "./component/PatientInfo";
+import ProfileInfo from "./component/ProfileInfo";
 import PatientHistory from "./component/PatientHistory";
 import Login from "./component/Login";
 import Footer from "./component/Footer";
@@ -26,14 +26,14 @@ function App() {
           <Route path="/login" exact component={Login}></Route>
           <Route path="/" exact component={HomePage}></Route>
           <Route path="/patientList" exact component={PatientList}></Route>
-          <Route path="/patientInfo/:id" exact component={PatientInfo}></Route>
+          <Route path="/ProfileInfo/:id" exact component={ProfileInfo}></Route>
           <Route
             path="/patientHistory/:id"
             exact
             component={PatientHistory}
           ></Route>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </Router>
   );
