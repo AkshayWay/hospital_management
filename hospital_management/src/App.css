@@ -1,3 +1,5 @@
+@import "~antd/dist/antd.css";
+
 .App {
   text-align: center;
 }
@@ -38,4 +40,7 @@
 }
 .bg-primarys {
   background-color: #82d305 !important;
+}
+.center {
+  padding: 190px 0;
 }

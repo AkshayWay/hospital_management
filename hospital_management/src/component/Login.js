@@ -6,6 +6,10 @@ import {
   hashHistory,
 } from "react-router-dom";
 import axios from "axios";
+import "antd/dist/antd.css";
+import { Form, Input, Button, Checkbox } from "antd";
+import { Alert } from "antd";
+import "../App.css";
 
 export default class Login extends Component {
   constructor(props) {
@@ -17,22 +21,26 @@ export default class Login extends Component {
       userName: "",
       userType: 0,
       errorMsg: "",
+      errMSgDisplay: "none",
     };
   }
   onEmailChange = (e) => this.setState({ email: e.target.value });
   onPasswordChange = (e) => this.setState({ password: e.target.value });
   onSubmit = (e) => {
-    e.preventDefault();
-    const obj = {
-      tbl_user_email: this.state.email,
-      tbl_user_password: this.state.password,
-    };
+    // e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+    var newEmail = e.email;
+    var newPassword = e.password;
+
+    // const obj = {
+    //   tbl_user_email: e.email,
+    //   tbl_user_password: e.password,
+    // };
     axios
       .get(
-        "http://localhost:5000/medicare/login/" +
-          this.state.email +
-          "/" +
-          this.state.password
+        "http://localhost:5000/medicare/login/" + newEmail + "/" + newPassword
       )
       .then((response) => {
         console.log("response:", response.data[0]);
@@ -54,40 +62,104 @@ export default class Login extends Component {
           window.location.reload(true);
         } else {
           this.setState({
+            errMSgDisplay: "inline",
             errorMsg: "User email or password is incorrect.",
           });
+
+          console.log("Error MSg:", this.state.errorMsg);
         }
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+  onFinish = (values) => {
+    console.log("Success:", values);
+  };
+
   render() {
+    const layout = {
+      labelCol: {
+        span: 8,
+      },
+      wrapperCol: {
+        span: 10,
+      },
+    };
+    const tailLayout = {
+      wrapperCol: {
+        offset: 8,
+        span: 16,
+      },
+    };
+
+    // const onFinish = (values) => {
+    //  console.log("Success:", values);
+    //};
+
+    //const onFinishFailed = (errorInfo) => {
+    //console.log("Failed:", errorInfo);
+    //};
+    // };
+    const validateMessages = {
+      required: "${label} is required!",
+      types: {
+        email: "${label} is not validate email!",
+      },
+    };
+
     return (
-      <div>
-        <div>
-          <h1>Login page</h1>
-          <label>{this.state.errorMsg}</label>
-          <form onSubmit={this.onSubmit}>
-            <label>email</label>
-            <input
-              type="email"
-              value={this.state.email}
-              onChange={this.onEmailChange}
-            ></input>
-            <label>Password</label>
-            <input
-              type="password"
-              value={this.state.password}
-              onChange={this.onPasswordChange}
-            ></input>
-            <div>
-              <button type="submit" className="btn btn-outline-primary">
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
+      <div className="center">
+        <Alert
+          message={this.state.errorMsg}
+          style={{ display: this.state.errMSgDisplay }}
+          type="warning"
+        />
+        <Form
+          {...layout}
+          name="basic"
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={this.onSubmit}
+          validateMessages={validateMessages}
+
+          // onSubmit={}
+        >
+          <Form.Item
+            label="Email"
+            name="email"
+            value={this.state.email}
+            onChange={this.state.onEmailChange}
+            rules={[
+              {
+                required: true,
+                type: "email",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            value={this.state.password}
+            onChange={this.state.onPasswordChange}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     );
   }
