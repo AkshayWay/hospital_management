@@ -1,0 +1,116 @@
+
+
+
+
+
+
+
+-----------User information table ----------
+CREATE TABLE `tbl_user_info` (
+  `tbl_user_id` int NOT NULL AUTO_INCREMENT,
+  `tbl_user_fullName` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `tbl_user_email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `tbl_user_password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `tbl_user_phoneNumber` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `tbl_user_address` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tbl_user_city` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tbl_user_state` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tbl_user_pincode` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tbl_user_type` int NOT NULL,
+  PRIMARY KEY (`tbl_user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf32;
+
+*For adding multiple patients
+
+INSERT INTO `db_assignment_ajackus`.`tbl_user_info`
+(`tbl_user_fullName`,`tbl_user_email`,`tbl_user_password`,`tbl_user_phoneNumber`,`tbl_user_address`,`tbl_user_city`,`tbl_user_state`,`tbl_user_pincode`,`tbl_user_type`)
+VALUES
+('Vikas Jain','vikasJ225@gamil.com','HealthCare@123','7896541230','Charkop, Kandivali','Mumbai','Maharashtra','400056',1);
+
+*For single doctor
+
+INSERT INTO `db_assignment_ajackus`.`tbl_user_info`
+(`tbl_user_fullName`,`tbl_user_email`,`tbl_user_password`,`tbl_user_phoneNumber`,`tbl_user_address`,`tbl_user_city`,`tbl_user_state`,`tbl_user_pincode`,`tbl_user_type`)
+VALUES
+('Ramakant Dalvi','ramakant@gamil.com','RamaKan@1985','9862035105','Sunil Nagar', Dombivali','Thane','Maharashtra','400069',2);
+
+*For patient tbl_user_type=1 and for doctor tbl_user_type=2
+
+
+------------------------
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_patient_info`(
+IN _tbl_user_id INT,
+IN _tbl_user_fullName varchar(200),
+IN _tbl_user_email varchar(100),
+IN _tbl_user_password varchar(100),
+IN _tbl_user_phoneNumber varchar(10),
+IN _tbl_user_address varchar(1000),
+IN _tbl_user_city varchar(100),
+IN _tbl_user_state varchar(100),
+IN _tbl_user_pincode varchar(6),
+IN _tbl_user_type int
+)
+BEGIN
+ IF(_tbl_user_id=0) THEN
+	INSERT INTO `tbl_user_info`(`tbl_user_fullName`,`tbl_user_email`,`tbl_user_password`,
+`tbl_user_phoneNumber`,`tbl_user_address`,`tbl_user_city`,`tbl_user_state`,`tbl_user_pincode`,`tbl_user_type`)
+VALUES
+(_tbl_user_fullName,_tbl_user_email,_tbl_user_password,_tbl_user_phoneNumber,_tbl_user_address,
+_tbl_user_city,_tbl_user_state,_tbl_user_pincode,1);
+
+ELSE
+UPDATE `tbl_user_info`
+SET
+`tbl_user_fullName` = _tbl_user_fullName,
+`tbl_user_email` = _tbl_user_email,
+`tbl_user_password` = _tbl_user_password,
+`tbl_user_phoneNumber` = _tbl_user_phoneNumber,
+`tbl_user_address` = _tbl_user_address,
+`tbl_user_city` = _tbl_user_city,
+`tbl_user_state` = _tbl_user_state,
+`tbl_user_pincode` = _tbl_user_pincode,
+`tbl_user_type` = _tbl_user_type
+WHERE `tbl_user_id` = _tbl_user_id;
+ END IF;
+END$$
+DELIMITER ;
+
+-------------------------
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_new_diagnosis`(
+IN _tbl_patient_diagnosis text,
+IN tbl_patient_medicine text,
+IN _tbl_patient_id int
+)
+BEGIN
+ INSERT INTO `tbl_patient_history`(`tbl_patient_diagnosis`,`tbl_patient_medicine`,`tbl_patient_id`)
+ VALUES(_tbl_patient_diagnosis,tbl_patient_medicine,_tbl_patient_id);
+END$$
+DELIMITER ;
+
+---------------------------
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_check_user`(
+IN _tbl_user_email varchar(100),
+IN _tbl_user_password varchar(100)
+)
+BEGIN
+ select * from tbl_user_info where tbl_user_email=_tbl_user_email  and tbl_user_password=_tbl_user_password;
+END$$
+DELIMITER ;
+-----------------------------
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_user_info`(
+IN _tbl_patient_id int
+)
+BEGIN
+	Delete from tbl_patient_history where tbl_patient_id=_tbl_patient_id;
+	Delete from tbl_user_info where tbl_user_id=_tbl_patient_id;
+END$$
+DELIMITER ;
+
+
+
+
