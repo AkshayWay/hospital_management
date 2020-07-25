@@ -128,7 +128,7 @@ export default class ProfileInfo extends Component {
     if (value.length != 10) {
       this.setState({
         errMSgDisplay: "inline",
-        warning_message: "Invalid mobile nuumber",
+        warning_message: "Invalid mobile number",
       });
     } else {
       this.setState({
@@ -136,6 +136,15 @@ export default class ProfileInfo extends Component {
       });
     }
   };
+  handlePassword = (rule, inputPassword, callback) => {
+    var passw = /^(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
+    console.log(passw.exec(inputPassword));
+    if (passw.exec(inputPassword) == null) {
+      callback("incorrect password");
+      //return true;
+    }
+  };
+
   render() {
     const errorMessage = this.state.errorMsg;
     const layout = {
@@ -148,6 +157,7 @@ export default class ProfileInfo extends Component {
       types: {
         email: "${label} is not validate email!",
         number: "${label} is not a validate number!",
+        regexp: "${label} is not a validate password!",
       },
       number: {
         range: "${label} must be between ${min} and ${max}",
@@ -188,9 +198,21 @@ export default class ProfileInfo extends Component {
             >
               <Input />
             </Form.Item>
+
             <Form.Item
               name="userPassword"
-              rules={[{ required: true }]}
+              // onChange={this.handlePassword(this.value)}
+              rules={[
+                {
+                  required: true,
+                  type: "regexp",
+                  pattern: /^(?=.*[a-z])(?=.*[A-Z]).{8,20}$/,
+                  // message: "Wrong format Akshgay",
+                },
+                {
+                  validator: this.handlePassword,
+                },
+              ]}
               label="Password"
             >
               <Input.Password />
@@ -210,7 +232,6 @@ export default class ProfileInfo extends Component {
             <Form.Item name="userAddress" label="Address 1">
               <Input.TextArea />
             </Form.Item>
-
             <Form.Item label="Address 2" style={{ marginBottom: 0 }}>
               <Form.Item
                 name="userCity"
@@ -245,7 +266,6 @@ export default class ProfileInfo extends Component {
                 <InputNumber />
               </Form.Item>
             </Form.Item>
-
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
               <Button type="primary" htmlType="submit">
                 {this.state.actionToPerform}
