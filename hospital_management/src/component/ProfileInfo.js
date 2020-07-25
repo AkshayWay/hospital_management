@@ -123,24 +123,19 @@ export default class ProfileInfo extends Component {
       this.setState({ errorMsg: true });
     }
   }
-  validateMobileNumber = (rule, value, callback) => {
-    console.log("this is a mobil validator", value);
-    if (value.length != 10) {
-      this.setState({
-        errMSgDisplay: "inline",
-        warning_message: "Invalid mobile number",
-      });
-    } else {
-      this.setState({
-        errMSgDisplay: "none",
-      });
+  handleMobileNumber = (rule, inputMobile, callback) => {
+    var mobNo = /^\d{10}$/;
+    console.log(mobNo.exec(inputMobile));
+    if (mobNo.exec(inputMobile) == null) {
+      callback("Incorrect mobile number");
+      //return true;
     }
   };
   handlePassword = (rule, inputPassword, callback) => {
     var passw = /^(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
     console.log(passw.exec(inputPassword));
     if (passw.exec(inputPassword) == null) {
-      callback("incorrect password");
+      callback("Incorrect password");
       //return true;
     }
   };
@@ -206,7 +201,7 @@ export default class ProfileInfo extends Component {
                 {
                   required: true,
                   type: "regexp",
-                  pattern: /^(?=.*[a-z])(?=.*[A-Z]).{8,20}$/,
+                  //pattern: /^(?=.*[a-z])(?=.*[A-Z]).{8,20}$/,
                   // message: "Wrong format Akshgay",
                 },
                 {
@@ -224,6 +219,10 @@ export default class ProfileInfo extends Component {
               rules={[
                 {
                   required: true,
+                  type: "regexp",
+                },
+                {
+                  validator: this.handleMobileNumber,
                 },
               ]}
             >
