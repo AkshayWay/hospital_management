@@ -128,7 +128,6 @@ export default class ProfileInfo extends Component {
     console.log(mobNo.exec(inputMobile));
     if (mobNo.exec(inputMobile) == null) {
       callback("Incorrect mobile number");
-      //return true;
     }
   };
   handlePassword = (rule, inputPassword, callback) => {
@@ -137,6 +136,13 @@ export default class ProfileInfo extends Component {
     if (passw.exec(inputPassword) == null) {
       callback("Incorrect password");
       //return true;
+    }
+  };
+  handlePincode = (rule, inputPinCode, callback) => {
+    var pinCode = /^\d{6}$/;
+    console.log(pinCode.exec(inputPinCode));
+    if (pinCode.exec(inputPinCode) == null) {
+      callback("Incorrect pincode number");
     }
   };
 
@@ -255,14 +261,19 @@ export default class ProfileInfo extends Component {
               <Form.Item
                 name="userPincode"
                 label="Pin code"
-                rules={[{ required: true }]}
+                rules={[
+                  { required: true, type: "regexp" },
+                  {
+                    validator: this.handlePincode,
+                  },
+                ]}
                 style={{
                   display: "inline-block",
                   width: "calc(15% - 8px)",
                   margin: "0 8px",
                 }}
               >
-                <InputNumber />
+                <Input />
               </Form.Item>
             </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
